@@ -20,12 +20,12 @@
   html{-webkit-font-smoothing:antialiased}
   body{background:var(--canvas);color:var(--ink);font-family:var(--sans);line-height:1.55}
   a{color:inherit;text-decoration:none}
-  .wrap{max-width:1200px;margin:0 auto;padding:0 44px}
+  .wrap{max-width:1600px;margin:0 auto;padding:0 44px}
 
   nav{position:sticky;top:0;z-index:20;background:var(--sky);
       backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
       border-bottom:1px solid rgba(23,21,15,.12)}
-  .nav-in{max-width:1200px;margin:0 auto;padding:14px 44px;display:flex;align-items:center;gap:11px}
+  .nav-in{max-width:1600px;margin:0 auto;padding:14px 44px;display:flex;align-items:center;gap:11px}
   .wordmark{font-family:var(--serif);font-weight:400;font-size:33px;letter-spacing:.01em}
   .chip{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.14em;
         background:var(--ink);color:var(--paper);padding:4px 9px;border-radius:6px}
@@ -36,8 +36,8 @@
   .eyebrow{font-family:var(--mono);font-weight:700;font-size:11px;letter-spacing:.16em;
            text-transform:uppercase;color:var(--teal);display:inline-flex;align-items:center;gap:10px}
   .eyebrow::after{content:"";width:30px;height:2px;background:var(--coral)}
-  h1{font-family:var(--serif);font-weight:400;letter-spacing:-.01em;line-height:1.02;
-     font-size:clamp(2.8rem,1rem+6vw,4.4rem);margin:20px 0 0;max-width:34ch}
+  h1{font-family:var(--serif);font-weight:400;letter-spacing:-.018em;line-height:1.0;
+     font-size:clamp(2.6rem,4.85vw,80px);margin:18px 0 0;white-space:nowrap}
   .mark{background:linear-gradient(transparent 6%,var(--neon) 6%,var(--neon) 86%,transparent 86%);
         box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 .06em}
   .lede{margin:24px 0 0;font-size:18px;color:var(--ink-soft);max-width:62ch;text-wrap:pretty}
@@ -78,12 +78,13 @@
   .card:hover .open .ar{transform:translateX(4px)}
 
   footer{background:var(--ink);color:rgba(244,241,232,.72);margin-top:10px}
-  .foot{max-width:1200px;margin:0 auto;padding:30px 44px;display:flex;align-items:center;
+  .foot{max-width:1600px;margin:0 auto;padding:30px 44px;display:flex;align-items:center;
         gap:16px;flex-wrap:wrap}
   .foot .wm{font-family:var(--serif);font-size:18px;color:var(--paper)}
   .palette{margin-left:auto;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em}
   .sw{display:inline-block;width:9px;height:9px;border-radius:50%;vertical-align:middle;margin:0 3px 2px}
 
+  @media (max-width:860px){h1{white-space:normal;font-size:clamp(2.2rem,9vw,3.1rem)}}
   @media (max-width:560px){.wrap,.nav-in,.foot{padding-left:22px;padding-right:22px}header{padding-top:54px}}
   @media (prefers-reduced-motion:reduce){
     .card{opacity:1;transform:none;animation:none;transition:none}
