@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gnosis ACT · Reading Homework 2 · Warm-editorial DLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Gnosis ACT - Warm-editorial Design Language v1
+     Reading Homework 2: the three-strategy timed exercise
+     (single-page walkthrough mirroring the production flow:
+     Strategy briefing -> timed exercise -> pause -> part
+     transition -> results). Real strategy names, real briefs,
+     real passages, real questions, real results structure.
+     Tokens are semantic; color carries meaning, never decoration.
+     ============================================================ */
+  :root {
+    /* palette */
+    --paper: #F4F1E8;
+    --canvas: #E7E2D4;
+    --panel: #ECE6D6;
+    --ink: #17150F;
+    --ink-soft: #524C3E;
+    --ink-50: rgba(23, 21, 15, .5);
+    --ink-60: rgba(23, 21, 15, .6);
+    --ink-70: rgba(23, 21, 15, .7);
+    --ink-14: rgba(23, 21, 15, .14);
+    --ink-28: rgba(23, 21, 15, .28);
+    --neon: #C2EE45;
+    --coral: #D56A54;
+    --sky: rgba(185, 214, 222, .55);
+    --sky-solid: #B9D6DE;
+    --teal: #246A72;
+    --surface: #FFFFFF;
+
+    /* type */
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'Space Grotesk', system-ui, sans-serif;
+    --mono: 'Space Mono', ui-monospace, monospace;
+
+    /* primitives */
+    --r-card: 14px;
+    --r-ctrl: 8px;
+    --r-chip: 5px;
+    --shadow: 8px 8px 0 rgba(36, 106, 114, .18);
+    --shadow-sm: 4px 4px 0 rgba(36, 106, 114, .18);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --nav-h: 60px;
+    --line-h: 30px; /* passage rhythm; brackets are positioned against this */
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--canvas);
+    font-family: var(--sans);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- shared atoms ---------- */
+  .eyebrow {
+    font: 700 11px var(--mono);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .eyebrow.coral { color: var(--coral); }
+  .eyebrow.muted { color: var(--ink-50); }
+  .eyebrow.neon {
+    position: relative;
+    color: var(--ink);
+    padding: 4px 8px;
+    display: inline-block;
+    letter-spacing: .13em;
+  }
+  .eyebrow.neon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--neon);
+    transform: skewX(-6deg);
+    z-index: 0;
+  }
+  .eyebrow.neon span { position: relative; z-index: 1; }
+
+  .coral-rule { width: 22px; height: 2px; background: var(--coral); margin-top: 10px; }
+
+  h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 400; letter-spacing: -.01em; }
+  h1 { font-size: 52px; line-height: 1.04; }
+  h2 { font-size: 42px; line-height: 1.05; }
+  h3 { font-size: 22px; line-height: 1.15; }
+  p { margin: 0; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 600 14px var(--sans);
+    border-radius: var(--r-ctrl);
+    padding: 14px 24px;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .18s var(--ease);
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn-coral { background: var(--coral); color: #fff; }
+  .btn-ink { background: var(--ink); color: var(--paper); }
+  .btn-outline { background: transparent; color: var(--ink); border-color: var(--ink-28); padding: 13px 22px; }
+
+  .page {
+    width: 1200px;
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--paper);
+  }
+  section { padding: 56px; border-bottom: 1px solid var(--ink-14); }
+  section.band { background: var(--panel); }
+  .section-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 24px; }
+  .lede { font: 400 16px/1.6 var(--sans); color: var(--ink-70); max-width: 640px; }
+
+  /* ---------- nav (sky sticky) ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 56px;
+    background: var(--sky);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--ink-14);
+  }
+  .wordmark { display: flex; align-items: center; gap: 10px; }
+  .wordmark .name { font: 400 26px var(--serif); }
+  .wordmark .chip {
+    font: 700 11px var(--mono);
+    letter-spacing: .1em;
+    padding: 3px 7px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+  }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-right .who { font: 500 13px var(--sans); color: var(--ink-70); }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    background: var(--paper);
+    display: flex; align-items: center; justify-content: center;
+    font: 600 13px var(--sans);
+  }
+
+  /* ---------- card / panel ---------- */
+  .card {
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow);
+  }
+  .card.surface { background: var(--surface); }
+
+  /* ---------- briefing: three-part overview rail ---------- */
+  .moves {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 30px;
+    border-top: 1px solid var(--ink-14);
+  }
+  .move { padding: 22px 24px 22px 0; border-right: 1px solid var(--ink-14); }
+  .move:last-child { border-right: 0; padding-right: 0; }
+  .move.current .mtitle { color: var(--ink); }
+  .move .num { font: 700 11px var(--mono); letter-spacing: .12em; color: var(--coral); }
+  .move .mtitle { margin-top: 10px; font: 400 21px/1.2 var(--serif); }
+  .move .mstrat { margin-top: 6px; font: 700 10px var(--mono); letter-spacing: .08em; color: var(--ink-50); text-transform: uppercase; }
+  .move .mbody { margin-top: 8px; font: 400 13.5px/1.5 var(--sans); color: var(--ink-60); }
+  .move .here {
+    display: inline-block; margin-top: 10px;
+    font: 700 9.5px var(--mono); letter-spacing: .1em;
+    background: var(--neon); color: var(--ink);
+    padding: 3px 7px; border-radius: var(--r-chip);
+  }
+
+  /* ---------- briefing: the assigned-strategy card ---------- */
+  .brief-card { margin-top: 34px; padding: 30px 32px; }
+  .brief-card .blabel { font: 700 11px var(--mono); letter-spacing: .12em; color: var(--coral); text-transform: uppercase; }
+  .brief-card .bname { margin-top: 12px; font: 400 38px/1 var(--serif); }
+  .brief-card .bbrief { margin-top: 16px; font: 400 16px/1.65 var(--sans); color: var(--ink-70); max-width: 620px; }
+  .briefing-cta { margin-top: 30px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .briefing-cta .meta { font: 700 11px var(--mono); letter-spacing: .08em; color: var(--ink-50); }
+
+  /* ---------- sticky timer header (two-tier urgency) ---------- */
+  .timer-bar {
+    position: sticky;
+    top: var(--nav-h);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 22px;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow-sm);
+  }
+  /* the coral edge that fades up as time runs low */
+  .timer-bar::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    border-radius: var(--r-card) 0 0 var(--r-card);
+    background: var(--coral);
+    opacity: 0;
+    animation: tm-edge 8s ease-in-out infinite;
+  }
+  .timer-left { display: flex; align-items: center; gap: 16px; }
+  .timer-clock {
+    font: 700 30px var(--mono);
+    letter-spacing: .01em;
+    color: var(--ink);
+    transform-origin: left center;
+    animation: tm-clock 8s ease-in-out infinite;
+  }
+  .timer-labels { position: relative; height: 30px; min-width: 168px; }
+  .timer-labels .lab {
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    font: 700 11px var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .lab.calm { color: var(--teal); animation: tm-calm 8s ease-in-out infinite; }
+  .lab.hot { color: var(--coral); opacity: 0; animation: tm-hot 8s ease-in-out infinite; }
+  .timer-count { font: 700 13px var(--mono); letter-spacing: .04em; color: var(--ink-60); text-transform: uppercase; margin-left: auto; }
+  .timer-track { flex: 1; max-width: 300px; height: 6px; border-radius: 999px; background: var(--ink-14); overflow: hidden; }
+  .timer-fill { height: 100%; width: 38%; border-radius: 999px; background: var(--teal); animation: tm-fillcolor 8s ease-in-out infinite; }
+  .pause-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    font: 600 12px var(--sans);
+    padding: 9px 14px;
+    border: 1.5px solid var(--ink-28);
+    border-radius: var(--r-ctrl);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .pause-btn:hover { border-color: var(--ink); }
+
+  /* ---------- bracket toolbar (questions-first) ---------- */
+  .bracket-bar {
+    margin-top: 22px;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+    padding: 12px 16px;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow-sm);
+  }
+  .bracket-bar .bb-label { font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+  .bracket-bar .bb-add {
+    font: 600 12px var(--sans); padding: 5px 11px;
+    border: 1.5px solid var(--ink-28); border-radius: var(--r-ctrl);
+    background: transparent; color: var(--ink); cursor: pointer;
+  }
+  .bracket-bar .bb-add:hover { border-color: var(--ink); }
+  .bb-chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    font: 700 10.5px var(--mono); letter-spacing: .04em;
+    background: var(--neon); color: var(--ink);
+    border: 1.5px solid var(--ink);
+    padding: 4px 8px; border-radius: var(--r-chip);
+  }
+  .bb-chip .x { color: var(--ink-60); }
+
+  /* ---------- reader window ---------- */
+  .reader-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--ink-14);
+    font: 700 10px var(--mono);
+    letter-spacing: .12em;
+    color: var(--ink-50);
+  }
+  .reader-body { padding: 22px 24px 26px; }
+  .reader {
+    display: grid;
+    grid-template-columns: 1fr 178px;
+    gap: 0;
+    position: relative;
+  }
+  .ptitle { font: 400 23px/1.2 var(--serif); margin-bottom: 16px; }
+  .lines { position: relative; }
+  .line {
+    position: relative;
+    padding-left: 42px;
+    height: var(--line-h);
+    line-height: var(--line-h);
+    font: 400 15px var(--sans);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .line::before {
+    content: attr(data-n);
+    position: absolute;
+    left: 0;
+    width: 26px;
+    text-align: right;
+    font: 700 10px var(--mono);
+    color: var(--ink-50);
+    opacity: .7;
+  }
+  /* neon highlighter wipe on the cited evidence */
+  .mark {
+    position: relative;
+    background-image: linear-gradient(to right, rgba(194, 238, 69, .6) 50%, rgba(194, 238, 69, 0) 50%);
+    background-repeat: no-repeat;
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: 1px 3px;
+    animation: gx-markbg 5.5s ease-in-out infinite;
+  }
+  /* bracket rail (questions-first strategy annotations) */
+  .brackets { position: relative; }
+  .bracket {
+    position: absolute;
+    left: 14px;
+    width: 12px;
+    border: 1.5px solid var(--teal);
+    border-left: 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .btag {
+    position: absolute;
+    left: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    font: 700 9.5px var(--mono);
+    letter-spacing: .08em;
+    color: var(--ink);
+    background: var(--neon);
+    padding: 3px 6px;
+    border-radius: var(--r-chip);
+  }
+  .strategy-note {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--ink-14);
+    font: 400 13px/1.5 var(--sans);
+    color: var(--ink-60);
+  }
+  .strategy-note b { color: var(--ink); font-weight: 600; }
+  .source-line { margin-top: 14px; font: 400 11px/1.5 var(--sans); color: var(--ink-50); }
+
+  /* ---------- question (clean, mid-exercise) ---------- */
+  .q-card { margin-top: 24px; padding: 22px 24px 24px; }
+  .q-kicker { font: 700 9.5px var(--mono); letter-spacing: .12em; color: var(--ink-50); margin-bottom: 12px; }
+  .q-stem { font: 400 17px/1.35 var(--serif); margin-bottom: 16px; }
+  .opt {
+    position: relative;
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--r-ctrl);
+  }
+  .opt + .opt { margin-top: 2px; }
+  .opt.selected { background: var(--sky); }
+  .bubble {
+    flex: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink-28);
+    display: flex; align-items: center; justify-content: center;
+    font: 600 12px var(--sans);
+    color: var(--ink-50);
+  }
+  .opt.selected .bubble { border-color: var(--ink); color: var(--ink); }
+  .opt .otext { font: 500 14.5px var(--sans); color: var(--ink); }
+  .opt.dim .otext, .opt.dim .bubble { color: var(--ink-50); }
+  .q-foot { margin-top: 22px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .q-foot .honor { font: 400 12.5px var(--sans); color: var(--ink-60); max-width: 360px; }
+
+  /* ---------- pause state ---------- */
+  .pause-stage { position: relative; border-radius: var(--r-card); overflow: hidden; }
+  .pause-stage .frozen { filter: grayscale(.35) blur(1px); opacity: .5; pointer-events: none; }
+  .pause-mini {
+    border: 1.5px solid var(--ink);
+    border-radius: var(--r-card);
+    background: var(--paper);
+    padding: 22px 24px;
+  }
+  .pause-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(231, 226, 212, .55);
+  }
+  .pause-panel {
+    background: var(--sky);
+    border: 1.5px solid var(--ink);
+    border-radius: var(--r-card);
+    box-shadow: var(--shadow);
+    padding: 30px 36px;
+    text-align: center;
+    max-width: 420px;
+  }
+  .pause-panel .plabel { font: 700 12px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+  .pause-panel .frozen-clock { margin-top: 10px; font: 700 48px var(--mono); color: var(--ink); }
+  .pause-panel .pbody { margin-top: 12px; font: 400 14px/1.55 var(--sans); color: var(--ink-soft); }
+  .pause-panel .actions { margin-top: 22px; display: flex; gap: 10px; justify-content: center; }
+
+  /* ---------- part transition (between parts) ---------- */
+  .trans { max-width: 560px; text-align: center; }
+  .trans .badge {
+    display: inline-block;
+    font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase;
+    background: var(--neon); color: var(--ink);
+    padding: 5px 12px; border-radius: var(--r-chip);
+    margin-bottom: 18px;
+  }
+  .trans .tbody { margin-top: 14px; font: 400 16px/1.6 var(--sans); color: var(--ink-70); }
+  .trans .tcta { margin-top: 26px; }
+
+  /* ---------- results / winner reveal ---------- */
+  .results { animation: rise .9s var(--ease) both; }
+  .result-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
+  .rcard { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+  .rcard.win { background: var(--sky); }
+  .rcard-top { display: flex; align-items: center; justify-content: space-between; }
+  .rcard .rpart { font: 700 10px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-50); }
+  .best {
+    display: inline-flex; align-items: center;
+    font: 700 9.5px var(--mono); letter-spacing: .08em; text-transform: uppercase;
+    background: var(--neon); color: var(--ink);
+    border: 1.5px solid var(--ink);
+    padding: 2px 8px; border-radius: var(--r-chip);
+  }
+  .rcard .rname { font: 400 24px/1.05 var(--serif); }
+  .rcard .rpassage { font: 400 12px/1.4 var(--sans); color: var(--ink-60); }
+  .rcard .rscore { font: 400 44px/1 var(--serif); }
+  .rcard .rscore .den { font-size: 18px; color: var(--ink-50); }
+  .rcard .rtime { font: 700 12px var(--mono); letter-spacing: .04em; color: var(--ink-60); margin-top: -4px; }
+  .squares { display: flex; gap: 4px; margin-top: 2px; }
+  .sq { width: 11px; height: 11px; border: 1.5px solid var(--ink); border-radius: 3px; background: var(--ink-14); }
+  .sq.correct { background: var(--neon); }
+  .sq.wrong { background: var(--coral); }
+
+  .winner-card { margin-top: 22px; padding: 30px 32px; }
+  .winner-row { display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+  .winner-tagline {
+    font: 700 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--teal);
+    padding-bottom: 10px;
+  }
+  .winner-name {
+    position: relative;
+    font: 400 46px/1 var(--serif);
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+  .winner-name .conc {
+    position: absolute;
+    left: -34px; bottom: 6px;
+    font: 400 34px var(--serif);
+    color: var(--teal);
+    animation: gx-conc-hold 2.4s var(--ease) .5s both;
+  }
+  .winner-name .uline {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 100%; height: 3px;
+    background: var(--teal);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: gx-uline-hold 1s var(--ease) .9s forwards;
+  }
+  .winner-sub { margin-top: 18px; font: 400 16px/1.55 var(--sans); color: var(--ink-70); max-width: 560px; }
+  .winner-sub .mark2 {
+    background: linear-gradient(transparent 58%, rgba(194, 238, 69, .6) 58%);
+    padding: 0 2px;
+  }
+  .results-cta { margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .review-link {
+    background: none; border: 0;
+    font: 400 13px var(--sans); color: var(--ink-50);
+    text-decoration: underline; text-underline-offset: 3px;
+    cursor: default;
+  }
+
+  /* ---------- footer ---------- */
+  .footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 56px;
+    background: var(--ink);
+    color: rgba(244, 241, 232, .7);
+  }
+  .footer .l { font: 400 13px var(--sans); }
+  .footer .r { font: 700 10px var(--mono); letter-spacing: .12em; }
+
+  /* ============================================================
+     Keyframes (transform + opacity + color only)
+     ============================================================ */
+  @keyframes gx-markbg { 0%,10%{background-position:100% 0} 30%,88%{background-position:0 0} 100%{background-position:100% 0} }
+
+  /* one-shot reveals (results) - hold their resolved end state */
+  @keyframes gx-conc-hold { 0%{opacity:0;transform:scale(.5)} 60%{opacity:1;transform:scale(1.18)} 100%{opacity:1;transform:scale(1)} }
+  @keyframes gx-uline-hold { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+  @keyframes rise { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+  /* timer urgency: calm -> heightened -> calm (color/scale/opacity only) */
+  @keyframes tm-clock { 0%,55%{color:var(--ink);transform:scale(1)} 75%,92%{color:var(--coral);transform:scale(1.06)} 100%{color:var(--ink);transform:scale(1)} }
+  @keyframes tm-edge { 0%,58%{opacity:0} 76%,92%{opacity:1} 100%{opacity:0} }
+  @keyframes tm-calm { 0%,58%{opacity:1} 70%,94%{opacity:0} 100%{opacity:1} }
+  @keyframes tm-hot { 0%,60%{opacity:0} 76%,92%{opacity:1} 100%{opacity:0} }
+  @keyframes tm-fillcolor { 0%,55%{background:var(--teal)} 76%,92%{background:var(--coral)} 100%{background:var(--teal)} }
+
+  /* ============================================================
+     Reduced motion: jump every animation to its resolved end state.
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .mark { background-position: 0 0 !important; }
+    .winner-name .uline { transform: scaleX(1) !important; }
+    .winner-name .conc { opacity: 1 !important; transform: scale(1) !important; }
+    .results { opacity: 1 !important; transform: none !important; }
+    /* timer rests in its calm tier */
+    .timer-clock { color: var(--ink) !important; transform: scale(1) !important; }
+    .timer-bar::before { opacity: 0 !important; }
+    .lab.calm { opacity: 1 !important; }
+    .lab.hot { opacity: 0 !important; }
+    .timer-fill { background: var(--teal) !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ NAV (sky sticky, authenticated app) ============ -->
+<header class="nav">
+  <div class="wordmark">
+    <span class="name">Gnosis</span>
+    <span class="chip">ACT</span>
+  </div>
+  <nav class="nav-right" aria-label="Account">
+    <span class="who">Reading &middot; Homework 2</span>
+    <span class="avatar" aria-hidden="true">M</span>
+  </nav>
+</header>
+
+<main class="page">
+
+  <!-- ============ PHASE 1 - STRATEGY BRIEFING (per part) ============ -->
+  <section aria-labelledby="brief-h">
+    <div class="section-head">
+      <span class="eyebrow neon"><span>READING HOMEWORK 2</span></span>
+      <span class="eyebrow muted">HOMEWORK PART 2 OF 3</span>
+    </div>
+    <h1 id="brief-h">Your strategy for this passage</h1>
+    <p class="lede" style="margin-top:22px">
+      Lesson 2 taught three ways to work a Reading passage. Here you try each one on its own
+      timed passage, then see which earned you the most correct answers.
+    </p>
+
+    <!-- the three real parts: fixed passage-to-strategy mapping -->
+    <div class="moves">
+      <article class="move">
+        <div class="num">01 &middot;</div>
+        <h3 class="mtitle">Skim &amp; Answer</h3>
+        <p class="mstrat">Part 1</p>
+        <p class="mbody">Literary Narrative: Piano / Violin</p>
+      </article>
+      <article class="move current">
+        <div class="num">02 &middot;</div>
+        <h3 class="mtitle">Questions First</h3>
+        <p class="mstrat">Part 2</p>
+        <p class="mbody">Natural Science: What Bees Tell Us About Global Climate Change</p>
+        <span class="here">YOU ARE HERE</span>
+      </article>
+      <article class="move">
+        <div class="num">03 &middot;</div>
+        <h3 class="mtitle">Cited Questions First</h3>
+        <p class="mstrat">Part 3</p>
+        <p class="mbody">Natural Science: Desert Adaptations</p>
+      </article>
+    </div>
+
+    <!-- the assigned-strategy card (real brief, verbatim from Lisa's Step 7 doc) -->
+    <div class="card brief-card">
+      <p class="blabel">Strategy</p>
+      <h2 class="bname">Questions First</h2>
+      <p class="bbrief">
+        This is where you read the questions first and then you go to the passage. We read just
+        the questions, not the answer choices. Whenever you read a cited question, you should
+        bracket those lines in your passage, and put the question number next to the bracket
+        after the first line. When you go to the passage, skim it. Whenever you get to one of
+        those brackets, slow down and answer the question.
+      </p>
+    </div>
+
+    <div class="briefing-cta">
+      <a class="btn btn-coral" href="#exercise">Start Timer <span aria-hidden="true">&rarr;</span></a>
+      <span class="meta">THE 10:00 TIMER BEGINS WHEN YOU CLICK START TIMER. YOU CAN SUBMIT EARLY AT ANY POINT.</span>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 2 - TIMED EXERCISE ============ -->
+  <section id="exercise" class="band" aria-labelledby="ex-h">
+    <div class="section-head">
+      <span class="eyebrow coral">PART 2 &middot; QUESTIONS FIRST</span>
+    </div>
+    <h2 id="ex-h" class="sr-only" style="position:absolute;left:-9999px">Timed exercise, questions-first round</h2>
+
+    <!-- sticky two-tier timer header -->
+    <div class="timer-bar" role="timer" aria-label="Time remaining">
+      <div class="timer-left">
+        <span class="timer-clock">06:18</span>
+        <span class="timer-labels">
+          <span class="lab calm">TIME REMAINING</span>
+          <span class="lab hot">TIME RUNNING LOW</span>
+        </span>
+      </div>
+      <div class="timer-track" aria-hidden="true"><div class="timer-fill"></div></div>
+      <button class="pause-btn" type="button" aria-label="Pause the timer">
+        <span aria-hidden="true">&#10073;&#10073;</span> Pause
+      </button>
+      <span class="timer-count">1 of 10 answered</span>
+    </div>
+
+    <!-- questions-first bracket toolbar (only shown for the questions-first strategy) -->
+    <div class="bracket-bar" aria-label="Bracket annotations">
+      <span class="bb-label">Brackets</span>
+      <button class="bb-add" type="button">+ Add bracket</button>
+      <span class="bb-chip">Q31 &middot; lines 30-31 <span class="x" aria-hidden="true">&times;</span></span>
+    </div>
+
+    <!-- reader window: passage with bracket annotations + citation highlight -->
+    <div class="card surface" style="margin-top:22px">
+      <div class="reader-head">
+        <span>READING &middot; NATURAL SCIENCE</span>
+        <span>PART 2 OF 3</span>
+      </div>
+      <div class="reader-body">
+        <div class="reader">
+          <div class="lines">
+            <p class="ptitle">What Bees Tell Us About Global Climate Change</p>
+            <p class="passage-intro" style="margin:0 0 16px;font:italic 400 13.5px/1.5 var(--sans);color:var(--ink-60)">This passage is adapted from an article titled "What Bees Tell Us About Global Climate Change" by Sharon Tregaskis.</p>
+            <p class="line" data-n="1">Standing in the apiary on the grounds of the U.S.</p>
+            <p class="line" data-n="2">Department of Agriculture's Bee Research Laboratory</p>
+            <p class="line" data-n="3">in Beltsville, Maryland, Wayne Esaias digs through the</p>
+            <p class="line" data-n="4">canvas shoulder bag leaning against his leg in search of</p>
+            <p class="line" data-n="5">the cable he uses to download data. It's dusk as he runs</p>
+            <p class="line" data-n="6">the cord from his laptop, precariously perched on the</p>
+            <p class="line" data-n="7">beam of a cast-iron platform scale, to a small, battery-</p>
+            <p class="line" data-n="8">operated data logger attached to the spring inside the</p>
+            <p class="line" data-n="9">scale's steel column. In the 1800s, a scale like this</p>
+            <p class="line" data-n="10">would have weighed sacks of grain or crates of apples,</p>
+            <p class="line" data-n="11">peaches, and melons. Since arriving at the USDA's bee</p>
+            <p class="line" data-n="12">lab in January 2007, this scale has been loaded with a</p>
+            <p class="line" data-n="13">single item: a colony of Apis mellifera, the fuzzy,</p>
+            <p class="line" data-n="14">black-and-yellow honey bee.</p>
+            <p class="line" data-n="" style="color:var(--ink-50)"><span aria-hidden="true">. . .</span></p>
+            <p class="line" data-n="29">cluster is where the queen is, and they're keeping her</p>
+            <p class="line" data-n="30">at 93 degrees, the rest are just hanging there, <span class="mark">tensing</span></p>
+            <p class="line" data-n="31"><span class="mark">their flight muscles to generate heat.</span></p>
+          </div>
+          <div class="brackets" aria-label="Questions-first bracket annotations">
+            <!-- positions track --line-h (30px); ptitle + intro add the lead. Approximate. -->
+            <div class="bracket" style="top:560px;height:60px"><span class="btag">Q31 &middot; LINES 30-31</span></div>
+          </div>
+        </div>
+        <p class="strategy-note">
+          <b>Questions First in action.</b> Before reading, you bracketed where each cited
+          question lives and labeled it with its number. You skim the passage, then slow down at
+          each bracket to answer. The timer keeps running while you work.
+        </p>
+      </div>
+    </div>
+
+    <!-- a clean, mid-exercise question (real Q31 from the bees passage) -->
+    <div class="card q-card">
+      <div class="q-kicker">QUESTION 31 &middot; BRACKETED LINES 30-31</div>
+      <p class="q-stem">According to the passage, honey bees generate heat by:</p>
+      <div class="opt dim">
+        <span class="bubble">A</span>
+        <span class="otext">huddling together in the hive.</span>
+      </div>
+      <div class="opt dim">
+        <span class="bubble">B</span>
+        <span class="otext">eating nectar.</span>
+      </div>
+      <div class="opt selected">
+        <span class="bubble">C</span>
+        <span class="otext" style="text-decoration:underline;text-decoration-color:var(--teal);text-underline-offset:3px">tensing muscles used for flight.</span>
+        <span aria-hidden="true" style="margin-left:auto;color:var(--teal);font:400 22px var(--serif)">&there4;</span>
+      </div>
+      <div class="opt dim">
+        <span class="bubble">D</span>
+        <span class="otext">vibrating their stomachs.</span>
+      </div>
+      <div class="q-foot">
+        <p class="honor">You can submit at any time. Any answer left blank when the clock hits zero is submitted as is.</p>
+        <button class="btn btn-ink" type="button">Submit <span aria-hidden="true">&rarr;</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 3 - PAUSE (client-side honor freeze) ============ -->
+  <section aria-labelledby="pause-h">
+    <div class="section-head">
+      <span class="eyebrow muted">STATE &middot; PAUSED</span>
+    </div>
+    <h2 id="pause-h" style="margin-bottom:8px">The blackout when you pause</h2>
+    <p class="lede" style="margin-bottom:28px">
+      Pause and the passage and questions black out so there is no reading on frozen time. The
+      countdown holds at its current reading until you resume. Clicking anywhere on the backdrop
+      resumes too.
+    </p>
+
+    <div class="pause-stage">
+      <div class="frozen">
+        <div class="pause-mini">
+          <div class="reader-head" style="border:0;padding:0 0 12px">
+            <span>READING &middot; NATURAL SCIENCE</span>
+            <span>PART 2 OF 3</span>
+          </div>
+          <p class="line" data-n="5" style="white-space:normal">the cable he uses to download data. It's dusk as he runs</p>
+        </div>
+      </div>
+      <div class="pause-overlay">
+        <div class="pause-panel">
+          <p class="plabel">Paused</p>
+          <div class="frozen-clock">06:18</div>
+          <p class="pbody">The clock is frozen. Nothing is moving until you come back.</p>
+          <div class="actions">
+            <button class="btn btn-ink" type="button">Resume</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 4 - PART TRANSITION (between parts) ============ -->
+  <section aria-labelledby="trans-h">
+    <div class="section-head">
+      <span class="eyebrow muted">BETWEEN PARTS</span>
+    </div>
+    <div class="trans">
+      <span class="badge">Part 2 complete</span>
+      <h2 id="trans-h">Take a breath.</h2>
+      <p class="tbody">
+        You will see your results once all three parts are done. When you are ready, start
+        Part 3.
+      </p>
+      <div class="tcta">
+        <button class="btn btn-ink" type="button">Start Part 3 <span aria-hidden="true">&rarr;</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHASE 5 - RESULTS ============ -->
+  <section aria-labelledby="res-h">
+    <div class="results">
+      <div class="section-head">
+        <span class="eyebrow coral">RESULTS</span>
+      </div>
+      <div class="coral-rule" style="margin-bottom:18px"></div>
+      <h2 id="res-h">Your Reading Strategy Results</h2>
+      <p class="lede" style="margin-top:10px">
+        You tried three strategies on three passages. Here is how each performed.
+      </p>
+
+      <!-- three strategy cards (one per part); winner emphasized with a Best flag -->
+      <div class="result-cards">
+        <div class="card rcard">
+          <div class="rcard-top">
+            <span class="rpart">Part 1</span>
+          </div>
+          <h3 class="rname">Skim &amp; Answer</h3>
+          <p class="rpassage">Literary Narrative: Piano / Violin</p>
+          <span class="rscore">7<span class="den">/10</span></span>
+          <span class="rtime">&middot; 8:12</span>
+          <div class="squares" aria-label="7 of 10 correct">
+            <span class="sq correct"></span><span class="sq correct"></span><span class="sq wrong"></span>
+            <span class="sq correct"></span><span class="sq correct"></span><span class="sq wrong"></span>
+            <span class="sq correct"></span><span class="sq correct"></span><span class="sq wrong"></span>
+            <span class="sq correct"></span>
+          </div>
+        </div>
+
+        <div class="card rcard win">
+          <div class="rcard-top">
+            <span class="rpart">Part 2</span>
+            <span class="best" aria-hidden="true">&starf; Best</span>
+          </div>
+          <h3 class="rname">Questions First</h3>
+          <p class="rpassage">Natural Science: What Bees Tell Us About Global Climate Change</p>
+          <span class="rscore">9<span class="den">/10</span></span>
+          <span class="rtime">&middot; 7:45</span>
+          <div class="squares" aria-label="9 of 10 correct">
+            <span class="sq correct"></span><span class="sq correct"></span><span class="sq correct"></span>
+            <span class="sq correct"></span><span class="sq correct"></span><span class="sq correct"></span>
+            <span class="sq correct"></span><span class="sq wrong"></span><span class="sq correct"></span>
+            <span class="sq correct"></span>
+          </div>
+        </div>
+
+        <div class="card rcard">
+          <div class="rcard-top">
+            <span class="rpart">Part 3</span>
+          </div>
+          <h3 class="rname">Cited Questions First</h3>
+          <p class="rpassage">Natural Science: Desert Adaptations</p>
+          <span class="rscore">8<span class="den">/10</span></span>
+          <span class="rtime">&middot; 6:30</span>
+          <div class="squares" aria-label="8 of 10 correct">
+            <span class="sq correct"></span><span class="sq wrong"></span><span class="sq correct"></span>
+            <span class="sq correct"></span><span class="sq correct"></span><span class="sq correct"></span>
+            <span class="sq wrong"></span><span class="sq correct"></span><span class="sq correct"></span>
+            <span class="sq correct"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- winner banner: Confirm motif (there4 pop + teal underline draw) -->
+      <div class="card winner-card">
+        <div class="winner-row">
+          <span class="winner-name">
+            <span class="conc" aria-hidden="true">&there4;</span>
+            Questions First
+            <span class="uline" aria-hidden="true"></span>
+          </span>
+          <span class="winner-tagline">YOUR RECOMMENDED STRATEGY</span>
+        </div>
+        <p class="winner-sub">
+          You got <span class="mark2">the most questions right</span> using Questions First.
+        </p>
+      </div>
+
+      <div class="results-cta">
+        <button class="btn btn-ink" type="button">Back to Dashboard</button>
+        <button class="review-link" type="button" disabled title="Coming soon - per-question review">Review my answers</button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <span class="l">Gnosis ACT &middot; Reading Homework 2</span>
+  <span class="r">PAPER &middot; INK &middot; NEON &middot; CORAL &middot; SKY &middot; TEAL</span>
+</footer>
+
+</body>
+</html>

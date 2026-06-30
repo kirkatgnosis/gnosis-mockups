@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gnosis ACT · An ACT prep tutor who knows how you think</title>
+<meta name="description" content="Gnosis ACT is an AI tutoring platform that teaches metacognition. Lisa shifts your reactive test thinking to thinking about your thinking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Gnosis ACT - Warm-Editorial Design Language (DLS v1)
+   Landing surface (spec §7.1). Standalone, self-contained.
+   ============================================================ */
+
+:root{
+  /* Palette - semantic, never decorative */
+  --paper:#F4F1E8;
+  --canvas:#E7E2D4;
+  --panel:#ECE6D6;
+  --ink:#17150F;
+  --ink-soft:#524C3E;
+  --neon:#C2EE45;        /* highlighter - fills only, never text */
+  --coral:#D56A54;       /* the one true action */
+  --sky:rgba(185,214,222,.55);
+  --teal:#246A72;
+  --surface:#FFFFFF;
+
+  /* Primitives */
+  --shadow-card:8px 8px 0 rgba(36,106,114,.18);
+  --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--canvas);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- The six animations (transform + opacity only) ---------- */
+@keyframes gx-strike{0%,10%{transform:scaleX(0) rotate(-.6deg)}30%,88%{transform:scaleX(1) rotate(-.6deg)}100%{transform:scaleX(0) rotate(-.6deg)}}
+@keyframes gx-reason{0%,24%{opacity:0;transform:translateX(-4px)}46%,90%{opacity:1;transform:translateX(0)}100%{opacity:0}}
+@keyframes gx-conc{0%,50%{opacity:0;transform:translateY(-50%) scale(.5)}66%,92%{opacity:1;transform:translateY(-50%) scale(1)}100%{opacity:0;transform:translateY(-50%) scale(.5)}}
+@keyframes gx-uline{0%,52%{transform:scaleX(0)}70%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes gx-mark{0%,10%{transform:scaleX(0) skewX(-4deg)}30%,88%{transform:scaleX(1) skewX(-4deg)}100%{transform:scaleX(0) skewX(-4deg)}}
+@keyframes gx-markbg{0%,10%{background-position:100% 0}30%,88%{background-position:0 0}100%{background-position:100% 0}}
+@keyframes gx-loop{0%,8%{transform:scaleX(0)}60%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes gx-dot-b{0%,80%,100%{transform:translateY(0);opacity:.45}40%{transform:translateY(-3px);opacity:1}}
+@keyframes gx-caret-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+/* ---------- Page column ---------- */
+.page{width:1200px;margin:0 auto;background:var(--paper);transform-origin:top center}
+
+/* ---------- Nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 44px;
+  background:var(--sky);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(23,21,15,.12);
+}
+.brand{display:flex;align-items:center;gap:11px}
+.brand__word{font-family:'Instrument Serif',serif;font-weight:400;font-size:36px;letter-spacing:.01em;line-height:1}
+.brand__chip{font:700 20px 'Space Mono',monospace;letter-spacing:.1em;padding:2px 6px;background:var(--ink);color:var(--paper);border-radius:4px}
+.nav__actions{display:flex;align-items:center;gap:14px}
+
+/* ---------- Buttons ---------- */
+.btn{
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  border-radius:7px;border:0;cursor:pointer;display:inline-block;
+  text-decoration:none;line-height:1;
+  transition:transform .15s var(--ease-out-expo);
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.btn--coral{background:var(--coral);color:#fff;padding:10px 18px;font-size:16px}
+.btn--ink{background:var(--ink);color:var(--paper);padding:10px 18px;font-size:16px}
+.btn--outline{background:transparent;color:var(--ink);padding:9px 16px;font-size:15px;border:1px solid rgba(23,21,15,.28)}
+.btn--lg{border-radius:8px;padding:14px 24px;font-size:17px}
+
+/* ---------- Kickers / eyebrows ---------- */
+.kicker-neon{position:relative;font:700 13px 'Space Mono',monospace;letter-spacing:.13em;color:var(--ink);padding:4px 8px;display:inline-block}
+.kicker-neon::before{content:"";position:absolute;inset:0;background:var(--neon);transform:skewX(-6deg);z-index:0}
+.kicker-neon span{position:relative;z-index:1}
+.eyebrow{display:flex;align-items:center;gap:9px;margin-bottom:14px}
+.eyebrow__rule{display:block;width:22px;height:2px;background:var(--coral)}
+.eyebrow__text{font:700 11px 'Space Mono',monospace;letter-spacing:.14em;color:var(--coral)}
+.eyebrow--muted .eyebrow__text{color:rgba(23,21,15,.5)}
+
+/* ---------- Highlighter motif ---------- */
+.hl{position:relative;white-space:nowrap}
+.hl__bg{position:absolute;left:-4px;right:-4px;top:16%;bottom:12%;background:var(--neon);transform:scaleX(0) skewX(-4deg);transform-origin:left;animation:gx-mark 5.5s ease-in-out infinite;z-index:0}
+.hl__bg--static{transform:skewX(-4deg);animation:none;inset:18% -4px 14%}
+.hl__bg--closer{transform:skewX(-4deg);animation:none;left:-5px;right:-5px;top:14%;bottom:12%}
+.hl__text{position:relative;z-index:1}
+.hl-static{background:rgba(194,238,69,.6);-webkit-box-decoration-break:clone;box-decoration-break:clone;padding:1px 2px;color:var(--ink)}
+.hl-anim{
+  background-image:linear-gradient(to right, rgba(194,238,69,.6) 50%, rgba(194,238,69,0) 50%);
+  background-repeat:no-repeat;background-size:200% 100%;background-position:100% 0;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone;
+  animation:gx-markbg 5.5s ease-in-out infinite;padding:0 2px;
+}
+
+/* ---------- Hero ---------- */
+.hero{display:grid;grid-template-columns:0.82fr 1.18fr;gap:0;align-items:center}
+.hero__copy{padding:64px 36px 64px 44px}
+.hero__h1{margin:24px 0 0;font:400 54px/1.08 'Instrument Serif',serif;letter-spacing:-.01em;max-width:480px}
+.hero__lede{margin:26px 0 0;font:400 16px/1.55 'Space Grotesk',sans-serif;color:rgba(23,21,15,.74);max-width:380px}
+.hero__lede p{margin:0 0 14px}
+.hero__lede p:last-child{margin-bottom:0}
+.hero__lede strong{font-weight:700}
+.hero__cta{display:flex;align-items:center;gap:14px;margin-top:32px}
+.note-mono{margin-top:16px;font:400 12px 'Space Mono',monospace;letter-spacing:.03em;color:var(--ink)}
+.note-mono b{font-weight:700}
+.hero__preview{padding:44px 44px 44px 24px}
+
+/* ---------- Reader window ---------- */
+.reader{background:var(--paper);border:1.5px solid var(--ink);border-radius:14px;box-shadow:var(--shadow-card);overflow:hidden}
+.reader__passage{padding:18px 24px 16px;background:var(--surface)}
+.reader__meta{display:flex;justify-content:space-between;margin-bottom:11px}
+.mono-teal{font:700 12px 'Space Mono',monospace;letter-spacing:.12em;color:var(--teal)}
+.reader__title{font:400 24px/1.2 'Instrument Serif',serif;margin-bottom:9px}
+.reader__text{margin:0;font:400 12.5px/1.6 'Space Grotesk',sans-serif;color:rgba(23,21,15,.7)}
+
+/* Lisa bar */
+.lisa-bar{display:flex;align-items:center;gap:9px;padding:11px 24px;border-top:1px solid rgba(23,21,15,.12);border-bottom:1px solid rgba(23,21,15,.12);background:var(--sky)}
+.lisa-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--teal)}
+.lisa-name{font:600 13px 'Space Grotesk',sans-serif}
+.lisa-line{font:400 11.5px 'Space Grotesk',sans-serif;color:var(--ink)}
+#lisa-dots{display:inline-flex;align-items:center;gap:3px}
+#lisa-dots span{width:4px;height:4px;border-radius:50%;background:var(--ink);animation:gx-dot-b 1.1s ease-in-out infinite}
+#lisa-dots span:nth-child(2){animation-delay:.15s}
+#lisa-dots span:nth-child(3){animation-delay:.3s}
+#lisa-caret{display:inline-block;width:1.5px;height:1em;background:var(--ink);margin-left:1px;vertical-align:-2px;animation:gx-caret-blink 1s steps(1) infinite}
+
+/* Question + options */
+.reader__q{padding:18px 24px 20px;background:var(--surface)}
+.q-label{font:700 9.5px 'Space Mono',monospace;letter-spacing:.12em;color:var(--teal);margin-bottom:10px}
+.q-stem{margin:0 0 14px;font:400 17px/1.3 'Instrument Serif',serif}
+.opts{display:flex;flex-direction:column;gap:2px}
+.opt{position:relative;display:flex;align-items:center;gap:12px;padding:9px 10px;border-radius:8px}
+.opt--correct{padding:10px 10px;background:var(--sky)}
+.bub{flex:none;width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(23,21,15,.3);display:flex;align-items:center;justify-content:center;font:600 12px 'Space Grotesk',sans-serif;color:rgba(23,21,15,.55)}
+.bub--on{border-color:var(--ink);color:var(--ink)}
+.opt__text{position:relative;font:500 14.5px 'Space Grotesk',sans-serif;color:rgba(23,21,15,.55)}
+.opt__text--on{color:var(--ink)}
+.strike{position:absolute;left:-2px;top:52%;width:calc(100% + 4px);height:2.5px;background:var(--ink);transform:scaleX(0) rotate(-.6deg);transform-origin:left;animation:gx-strike 8s ease-in-out infinite}
+.reason{margin-left:auto;font:700 11px 'Space Mono',monospace;color:var(--ink-soft);white-space:nowrap;opacity:0;animation:gx-reason 8s ease-in-out infinite}
+.uline{position:absolute;left:0;bottom:-3px;width:100%;height:2px;background:var(--teal);transform:scaleX(0);transform-origin:left;animation:gx-uline 8s ease-in-out infinite}
+.conc{position:absolute;left:-14px;top:50%;opacity:0;transform:translateY(-50%) scale(.5);font:400 22px 'Instrument Serif',serif;color:var(--teal);animation:gx-conc 8s ease-in-out infinite}
+.lisa-note{margin-top:16px;padding-top:14px;border-top:1px dashed rgba(23,21,15,.25);font:400 13px/1.45 'Space Grotesk',sans-serif;color:rgba(23,21,15,.7)}
+.lisa-note b{color:var(--teal)}
+
+/* ---------- Section scaffolding ---------- */
+.section{padding:72px 44px 76px;border-top:1px solid rgba(23,21,15,.12)}
+.section--panel{padding:64px 44px 72px;background:var(--panel)}
+.h2{margin:0;font:400 46px/1.04 'Instrument Serif',serif;letter-spacing:-.01em}
+.lede{font:400 17px/1.6 'Space Grotesk',sans-serif;color:rgba(23,21,15,.72)}
+
+/* WHY - habit rail */
+.habits{display:grid;grid-template-columns:1fr 1fr 1fr 1.15fr;gap:0;align-items:start}
+.habit{padding:0 30px;border-left:1px solid rgba(23,21,15,.12)}
+.habit:first-child{padding-left:0;padding-right:30px;border-left:0}
+.habit:last-child{padding-right:0}
+.habit__dot{display:block;width:14px;height:14px;border-radius:50%;background:var(--ink);margin-bottom:22px}
+.habit__lbl{font:700 10px 'Space Mono',monospace;letter-spacing:.1em;color:rgba(23,21,15,.5);margin-bottom:7px}
+.habit__txt{font:400 21px/1.15 'Instrument Serif',serif}
+.habit--skill .habit__dot{width:18px;height:18px;margin-bottom:20px;background:var(--teal)}
+.habit--skill .habit__lbl{color:var(--teal)}
+.habit--skill .habit__txt{color:var(--teal)}
+
+/* HOW - numbered loop */
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.steps__track{position:absolute;top:8px;left:8%;right:8%;height:2px;background:rgba(23,21,15,.16)}
+.steps__fill{position:absolute;top:8px;left:8%;width:84%;height:2px;background:var(--coral);transform:scaleX(0);transform-origin:left;animation:gx-loop 5s ease-in-out infinite}
+.step{padding:0 38px;border-left:1px solid rgba(23,21,15,.14)}
+.step:first-child{padding-left:0;padding-right:38px;border-left:0}
+.step:last-child{padding-right:0}
+.step__node{display:block;width:18px;height:18px;border-radius:50%;background:var(--ink);margin-bottom:26px}
+.step__node--coral{background:var(--coral)}
+.step__node--teal{background:var(--teal)}
+.step__num{font:700 10px 'Space Mono',monospace;letter-spacing:.12em;color:rgba(23,21,15,.5);margin-bottom:7px}
+.step__title{font:400 24px/1.1 'Instrument Serif',serif;margin-bottom:10px}
+.step__body{margin:0;font:400 14.5px/1.55 'Space Grotesk',sans-serif;color:rgba(23,21,15,.68)}
+
+/* DIFF - comparison rows */
+.cmp{display:flex;flex-direction:column}
+.cmp__row{display:grid;grid-template-columns:1.1fr 1.5fr;gap:38px;align-items:start;padding:24px 0;border-top:1px solid rgba(23,21,15,.16)}
+.cmp__row:last-child{border-bottom:1px solid rgba(23,21,15,.16)}
+.cmp__now{font:500 17px/1.4 'Space Grotesk',sans-serif;color:rgba(23,21,15,.5)}
+.cmp__act{font:400 20px/1.35 'Instrument Serif',serif}
+.cmp__tag{font:700 9.5px 'Space Mono',monospace;letter-spacing:.1em;display:block;margin-bottom:6px}
+.cmp__tag--now{color:rgba(23,21,15,.4)}
+.cmp__tag--act{color:var(--coral)}
+
+/* CLOSER */
+.closer{padding:84px 44px 80px;background:var(--ink);color:var(--paper);text-align:center}
+.closer__h2{margin:0 auto;font:400 46px/1.08 'Instrument Serif',serif;max-width:740px;letter-spacing:-.01em}
+.closer__p{margin:26px auto 0;font:400 16px/1.6 'Space Grotesk',sans-serif;color:rgba(244,241,232,.72);max-width:600px}
+.email{display:flex;align-items:center;gap:0;margin:36px auto 0;max-width:460px;border:1.5px solid rgba(244,241,232,.4);border-radius:10px;overflow:hidden;background:rgba(244,241,232,.06)}
+.email__input{flex:1;min-width:0;padding:15px 16px;background:var(--paper);color:var(--ink);border:0;outline:0;font:400 15px 'Space Grotesk',sans-serif}
+.email__input::placeholder{color:var(--ink);opacity:1}
+.email__btn{font:600 18px 'Space Grotesk',sans-serif;color:#fff;background:var(--coral);padding:15px 24px;white-space:nowrap;border:0;cursor:pointer;transition:filter .15s var(--ease-out-expo)}
+.email__btn:hover{filter:brightness(1.05)}
+.closer .note-mono{color:rgba(244,241,232,.5)}
+
+/* FOOTER */
+.footer{display:flex;align-items:center;justify-content:space-between;padding:30px 44px;background:var(--paper);border-top:1px solid rgba(23,21,15,.12)}
+.footer__brand{display:flex;align-items:center;gap:10px}
+.footer__word{font:400 18px 'Instrument Serif',serif}
+.footer__chip{font:700 9px 'Space Mono',monospace;letter-spacing:.1em;padding:2px 5px;background:var(--ink);color:var(--paper);border-radius:4px}
+.footer__tag{margin-left:14px;font:400 12.5px 'Space Grotesk',sans-serif;color:rgba(23,21,15,.55)}
+.footer__meta{text-align:right;font:400 11px 'Space Mono',monospace;letter-spacing:.02em;color:rgba(23,21,15,.45);line-height:1.6}
+
+/* ---------- Reduced motion: jump to resolved end states ---------- */
+@media (prefers-reduced-motion: reduce){
+  .hl__bg,.strike,.reason,.uline,.conc,.steps__fill,.hl-anim,#lisa-dots span,#lisa-caret{animation:none!important}
+  .hl__bg{transform:scaleX(1) skewX(-4deg)!important}
+  .strike{transform:scaleX(1) rotate(-.6deg)!important}
+  .reason{opacity:1!important;transform:none!important}
+  .uline{transform:scaleX(1)!important}
+  .conc{opacity:1!important;transform:translateY(-50%) scale(1)!important}
+  .steps__fill{transform:scaleX(1)!important}
+  .hl-anim{background-position:0 0!important}
+}
+</style>
+</head>
+<body>
+<div class="page" id="page">
+
+  <!-- ============ NAV ============ -->
+  <header class="nav">
+    <div class="brand">
+      <span class="brand__word">Gnosis</span>
+      <span class="brand__chip">ACT</span>
+    </div>
+    <nav class="nav__actions" aria-label="Account">
+      <a class="btn btn--outline" href="#">Sign in</a>
+      <a class="btn btn--ink" href="#">Create account</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero__copy">
+        <span class="kicker-neon"><span>NOT A CHATBOT</span></span>
+        <h1 class="hero__h1" id="hero-heading">An ACT prep tutor who knows <span class="hl"><span class="hl__bg"></span><span class="hl__text">how you think.</span></span></h1>
+        <div class="hero__lede">
+          <p>Your ACT score is stuck . . . but not for the reason you think. You know the material on the test. The problem? You don't know how to <strong>think about your thinking</strong> while taking the test.</p>
+          <p><strong>Gnosis ACT</strong> is an AI tutoring platform that helps you do just that. Our AI tutor Lisa shifts your reactive, panicky "test thinking" to the higher order kind of thinking known as <strong>metacognition</strong>.</p>
+          <p>Thinking about how we think is a skill that makes us human. Gnosis ACT is making it test prep.</p>
+        </div>
+        <div class="hero__cta">
+          <a class="btn btn--coral btn--lg" href="#get-started">Get started →</a>
+        </div>
+        <div class="note-mono"><b>▪ Limited beta spots</b></div>
+      </div>
+
+      <div class="hero__preview">
+        <div class="reader" role="img" aria-label="Preview of a Gnosis ACT reading question with Lisa marking up the answer choices">
+          <div class="reader__passage">
+            <div class="reader__meta">
+              <span class="mono-teal">READING · SOCIAL SCIENCE</span>
+              <span class="mono-teal">PASSAGE 3</span>
+            </div>
+            <div class="reader__title">The Psychology of Everyday Objects</div>
+            <p class="reader__text">In 1988, cognitive scientist Donald Norman introduced the idea of <i>affordances</i>. <span class="hl-static">An object's design should signal how it can be used. When it doesn't, the design has failed its user, not the other way around.</span></p>
+          </div>
+
+          <div class="lisa-bar">
+            <span class="lisa-dot"></span>
+            <span class="lisa-name">Lisa</span>
+            <span class="lisa-line"><span id="lisa-dots" data-full="This one's like the practice questions you kept changing yesterday, Anne."><span></span><span></span><span></span></span><span id="lisa-text"></span><span id="lisa-caret" style="display:none"></span></span>
+          </div>
+
+          <div class="reader__q">
+            <div class="q-label">QUESTION 1 OF 4</div>
+            <p class="q-stem">According to Norman, what is the primary reason people struggle with everyday objects?</p>
+            <div class="opts">
+              <div class="opt">
+                <span class="bub">A</span>
+                <span class="opt__text">People misread an object's affordances<span class="strike"></span></span>
+                <span class="reason">exact words, wrong context</span>
+              </div>
+              <div class="opt opt--correct">
+                <span class="conc">∴</span>
+                <span class="bub bub--on">B</span>
+                <span class="opt__text opt__text--on">Poor design of the objects<span class="uline"></span></span>
+              </div>
+              <div class="opt">
+                <span class="bub">C</span>
+                <span class="opt__text">Users fail to adapt to good design<span class="strike" style="animation-delay:.45s"></span></span>
+                <span class="reason" style="animation-delay:.45s">reverse relationship</span>
+              </div>
+              <div class="opt">
+                <span class="bub">D</span>
+                <span class="opt__text">People feel too frustrated to keep trying<span class="strike" style="animation-delay:.9s"></span></span>
+                <span class="reason" style="animation-delay:.9s">interpretation</span>
+              </div>
+            </div>
+            <div class="lisa-note"><b>Lisa:</b> You almost switched your answer to C, the <b>reverse-relationship</b> trap you keep falling for. Eliminate answers by reasoning only about the evidence in the text. That's the skill that transfers.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ WHY GNOSIS ACT ============ -->
+    <section class="section" aria-labelledby="why-heading">
+      <div class="eyebrow">
+        <span class="eyebrow__rule"></span>
+        <span class="eyebrow__text">WHY GNOSIS ACT</span>
+      </div>
+      <h2 class="h2" id="why-heading" style="max-width:760px">The problem isn't what you know. It's <span class="hl"><span class="hl__bg hl__bg--static"></span><span class="hl__text">how you think.</span></span></h2>
+      <p class="lede" style="margin:24px 0 48px;max-width:620px">Students hit score ceilings not because they lack knowledge, but because they overthink, rush, and second-guess under pressure. Gnosis ACT teaches metacognition: noticing how you think <i>while</i> you're thinking. That one skill is the difference between knowing the material and scoring like you know it.</p>
+      <div class="habits">
+        <div class="habit">
+          <span class="habit__dot"></span>
+          <div class="habit__lbl">HABIT</div>
+          <div class="habit__txt">You overthink the easy ones.</div>
+        </div>
+        <div class="habit">
+          <span class="habit__dot"></span>
+          <div class="habit__lbl">HABIT</div>
+          <div class="habit__txt">You rush when time is running out.</div>
+        </div>
+        <div class="habit">
+          <span class="habit__dot"></span>
+          <div class="habit__lbl">HABIT</div>
+          <div class="habit__txt">You second-guess and switch.</div>
+        </div>
+        <div class="habit habit--skill">
+          <span class="habit__dot"></span>
+          <div class="habit__lbl">→ ONE SKILL</div>
+          <div class="habit__txt">Metacognition: catching it as you do it.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW IT WORKS ============ -->
+    <section class="section--panel" aria-labelledby="how-heading" style="border-top:1px solid rgba(23,21,15,.12)">
+      <div class="eyebrow eyebrow--muted">
+        <span class="eyebrow__text">HOW IT WORKS</span>
+      </div>
+      <h2 class="h2" id="how-heading" style="font-size:40px;line-height:1.05;margin-bottom:44px;max-width:560px">How the learning loop works.</h2>
+      <div class="steps">
+        <div class="steps__track"></div>
+        <div class="steps__fill"></div>
+        <div class="step">
+          <span class="step__node step__node--coral"></span>
+          <div class="step__num">01 · LEARN PROVEN STRATEGIES</div>
+          <div class="step__title">Learn proven strategies</div>
+          <p class="step__body">Lisa takes you through a proprietary curriculum with a long track record of student success, then helps shore up your understanding of the strategies.</p>
+        </div>
+        <div class="step">
+          <span class="step__node"></span>
+          <div class="step__num">02 · PRACTICE WITH REAL ACT MATERIAL</div>
+          <div class="step__title">Run it under pressure</div>
+          <p class="step__body">Apply it on real ACT-style passages while Lisa tracks your pacing, hesitations, and answer changes. Every rep builds a picture of how you think.</p>
+        </div>
+        <div class="step">
+          <span class="step__node step__node--teal"></span>
+          <div class="step__num">03 · COME BACK SMARTER</div>
+          <div class="step__title">Learn your hidden testing patterns.</div>
+          <p class="step__body">Lisa builds an evolving profile of how you think and test, then uses that to deliver personalized AI tutoring uniquely fitted to you.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ BUILT DIFFERENT ============ -->
+    <section class="section" aria-labelledby="diff-heading" style="padding-bottom:80px">
+      <div class="eyebrow eyebrow--muted">
+        <span class="eyebrow__text">BUILT DIFFERENT</span>
+      </div>
+      <h2 class="h2" id="diff-heading" style="font-size:40px;line-height:1.05;margin-bottom:38px;max-width:660px">What Gnosis ACT does that other prep can't.</h2>
+      <div class="cmp">
+        <div class="cmp__row">
+          <div class="cmp__now"><span class="cmp__tag cmp__tag--now">WHAT YOU GET NOW</span>"You got 7 out of 10 correct."</div>
+          <div class="cmp__act"><span class="cmp__tag cmp__tag--act">WHAT GNOSIS ACT DOES</span>"You changed 2 correct answers to wrong ones. <span class="hl-anim">Here's the pattern, and here's how to break it.</span>"</div>
+        </div>
+        <div class="cmp__row">
+          <div class="cmp__now"><span class="cmp__tag cmp__tag--now">WHAT YOU GET NOW</span>More practice questions.</div>
+          <div class="cmp__act"><span class="cmp__tag cmp__tag--act">WHAT GNOSIS ACT DOES</span>A curriculum that teaches you how to think, not just what to answer.</div>
+        </div>
+        <div class="cmp__row">
+          <div class="cmp__now"><span class="cmp__tag cmp__tag--now">WHAT YOU GET NOW</span>Generic study tips for everyone.</div>
+          <div class="cmp__act"><span class="cmp__tag cmp__tag--act">WHAT GNOSIS ACT DOES</span>Strategies tailored to your specific patterns and failure modes.</div>
+        </div>
+        <div class="cmp__row">
+          <div class="cmp__now"><span class="cmp__tag cmp__tag--now">WHAT YOU GET NOW</span>Starting from scratch every session.</div>
+          <div class="cmp__act"><span class="cmp__tag cmp__tag--act">WHAT GNOSIS ACT DOES</span>A tutor who remembers everything and picks up where you left off.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CLOSING CTA ============ -->
+    <section class="closer" id="get-started" aria-labelledby="closer-heading">
+      <h2 class="closer__h2" id="closer-heading">Elite tutoring expertise. No scheduling. <span class="hl"><span class="hl__bg hl__bg--closer"></span><span class="hl__text" style="color:var(--ink)">No $150/hr price tag.</span></span></h2>
+      <p class="closer__p">The best private tutors teach exactly what Gnosis ACT teaches: how to notice your own patterns, apply specific strategies, and perform under pressure. They cost $80 to $150 an hour and see a handful of students. Gnosis ACT makes that caliber of coaching available to everyone.</p>
+      <form class="email" onsubmit="return false">
+        <label for="email-field" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Email address</label>
+        <input class="email__input" id="email-field" type="email" placeholder="Enter your email" autocomplete="email">
+        <button class="email__btn" type="submit">Get started →</button>
+      </form>
+      <div class="note-mono">▪ Limited beta spots</div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="footer__brand">
+      <span class="footer__word">Gnosis</span>
+      <span class="footer__chip">ACT</span>
+      <span class="footer__tag">AI tutoring that adapts to how you learn.</span>
+    </div>
+    <div class="footer__meta">Built by educators with a decade of ACT coaching experience.<br>© 2026 Gnosis ACT</div>
+  </footer>
+
+</div>
+
+<script>
+/* ---------- Fit the 1200px column to the viewport (self-contained) ---------- */
+(function(){
+  var page=document.getElementById('page');
+  function fit(){
+    if(!page) return;
+    var scale=Math.round(Math.min(1, window.innerWidth/1200)*1000)/1000;
+    page.style.zoom=scale;
+  }
+  fit();
+  var raf;
+  window.addEventListener('resize',function(){ if(raf) return; raf=requestAnimationFrame(function(){ raf=null; fit(); }); });
+  window.addEventListener('load',fit);
+})();
+
+/* ---------- Lisa type-on (self-healing; runs on a raw file:// open) ---------- */
+(function(){
+  var reduce=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function init(){
+    var dots=document.getElementById('lisa-dots');
+    var text=document.getElementById('lisa-text');
+    var caret=document.getElementById('lisa-caret');
+    if(!dots||!text||!caret) return false;
+    if(dots.getAttribute('data-init')) return true;
+    dots.setAttribute('data-init','1');
+    var full=dots.getAttribute('data-full')||'';
+    if(reduce){ dots.style.display='none'; caret.style.display='none'; text.textContent=full; return true; }
+    function reset(){ dots.style.display='inline-flex'; text.textContent=''; caret.style.display='none'; }
+    function run(){
+      reset();
+      setTimeout(function(){
+        dots.style.display='none';
+        caret.style.display='inline-block';
+        var i=0;
+        (function step(){
+          text.textContent=full.slice(0,i);
+          i++;
+          if(i<=full.length){ setTimeout(step,38); }
+          else{ setTimeout(run,6000); }
+        })();
+      },1400);
+    }
+    run();
+    return true;
+  }
+  if(!init()){
+    var iv=setInterval(function(){ if(init()) clearInterval(iv); },120);
+    setTimeout(function(){ clearInterval(iv); },15000);
+  }
+})();
+</script>
+</body>
+</html>

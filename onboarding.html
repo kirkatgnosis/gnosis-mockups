@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gnosis ACT Onboarding (Warm Editorial DLS)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Gnosis ACT - Onboarding mockup
+   Warm-editorial design language v1 (DESIGN_LANGUAGE.md)
+   Whole-ACT product: English, Math, Reading, Science.
+   Standalone: opens on a raw file:// double-click.
+   ============================================================ */
+
+:root {
+  /* Palette - semantic, never decorative */
+  --paper: #F4F1E8;
+  --canvas: #E7E2D4;
+  --panel: #ECE6D6;
+  --ink: #17150F;
+  --ink-soft: #524C3E;
+  --ink-50: rgba(23, 21, 15, .5);
+  --ink-60: rgba(23, 21, 15, .6);
+  --ink-70: rgba(23, 21, 15, .7);
+  --ink-28: rgba(23, 21, 15, .28);
+  --ink-14: rgba(23, 21, 15, .14);
+  --ink-12: rgba(23, 21, 15, .12);
+  --neon: #C2EE45;     /* highlighter - fills only, never text */
+  --coral: #D56A54;    /* the one true action */
+  --sky: rgba(185, 214, 222, .55);
+  --sky-solid: #B9D6DE;
+  --teal: #246A72;     /* conclusion / tutor */
+  --surface: #FFFFFF;
+
+  /* Primitives */
+  --radius-card: 14px;
+  --radius-ctrl: 8px;
+  --radius-tag: 5px;
+  --border: 1.5px solid var(--ink);
+  --hairline: 1px solid var(--ink-14);
+  --shadow: 8px 8px 0 rgba(36, 106, 114, .18);
+  --shadow-sm: 4px 4px 0 rgba(36, 106, 114, .18);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-ui: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+
+/* ---------- Keyframes (transform + opacity only) ---------- */
+
+/* Highlight - neon marker wipes in left -> right behind a phrase, holds, repeats */
+@keyframes gx-mark {
+  0%, 12%   { transform: scaleX(0) skewX(-4deg); }
+  32%, 90%  { transform: scaleX(1) skewX(-4deg); }
+  100%      { transform: scaleX(0) skewX(-4deg); }
+}
+
+/* Type-on supporting loops */
+@keyframes gx-dot {
+  0%, 80%, 100% { transform: translateY(0); opacity: .45; }
+  40%           { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes gx-caret {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Progress track - fill draws, node pops */
+@keyframes gx-prog {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes gx-node {
+  from { transform: translate(-50%, -50%) scale(0); }
+  to   { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Confirm - the teal underline draws under the chosen answer */
+@keyframes gx-uline {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes gx-pop {
+  from { opacity: 0; transform: translateY(-50%) scale(.4); }
+  to   { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+/* Section-toggle tick pops on select */
+@keyframes gx-tick {
+  from { opacity: 0; transform: scale(.4); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Card entrance */
+@keyframes gx-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Nav (sky sticky bar) ---------- */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 40px;
+  background: var(--sky);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--ink-12);
+}
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand .word {
+  font: 400 26px var(--font-display);
+  letter-spacing: -0.01em;
+}
+.brand .chip {
+  font: 700 12px var(--font-mono);
+  letter-spacing: 0.1em;
+  padding: 3px 7px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 4px;
+}
+.nav-meta {
+  font: 700 11px var(--font-mono);
+  letter-spacing: 0.16em;
+  color: var(--coral);
+}
+
+/* ---------- Page column ---------- */
+
+.shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.flow {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 52px 0 96px;
+}
+
+/* ---------- Progress track (thin teal track + node, NO step-count pill) ---------- */
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+.progress-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font: 700 11px var(--font-mono);
+  letter-spacing: 0.13em;
+  color: var(--ink-50);
+}
+.progress-meta .stage { color: var(--teal); }
+.progress-track {
+  position: relative;
+  height: 3px;
+  background: var(--ink-14);
+  border-radius: 2px;
+}
+.progress-fill {
+  position: absolute;
+  inset: 0 64% 0 0;            /* ~36% complete */
+  background: var(--teal);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: gx-prog 1.1s var(--ease) .15s both;
+}
+.progress-node {
+  position: absolute;
+  top: 50%;
+  left: 36%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: 2px solid var(--canvas);
+  transform: translate(-50%, -50%) scale(0);
+  animation: gx-node 1.1s var(--ease) .45s both;
+}
+
+/* ---------- Section head ---------- */
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 700 11px var(--font-mono);
+  letter-spacing: 0.14em;
+  color: var(--coral);
+  margin-bottom: 18px;
+}
+.kicker::after {
+  content: "";
+  width: 22px;
+  height: 2px;
+  background: var(--coral);
+}
+.prompt {
+  margin: 0;
+  font: 400 clamp(2.4rem, 1rem + 4vw, 3rem) var(--font-display);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  max-width: 18ch;
+}
+/* Highlight motif - neon marker wipes in behind one phrase */
+.mark {
+  position: relative;
+  white-space: nowrap;
+}
+.mark .mark-bg {
+  position: absolute;
+  left: -4px; right: -4px;
+  top: 14%; bottom: 12%;
+  background: var(--neon);
+  transform: scaleX(0) skewX(-4deg);
+  transform-origin: left;
+  animation: gx-mark 5.5s ease-in-out infinite;
+  z-index: 0;
+}
+.mark .mark-fg { position: relative; z-index: 1; }
+
+/* ---------- Lisa bar (sky bar, teal dot, type-on) ---------- */
+
+.lisa {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 18px;
+  background: var(--sky);
+  border: 1px solid var(--ink-14);
+  border-radius: 10px;
+}
+.lisa .dot {
+  flex: none;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+.lisa .name { font: 600 13px var(--font-ui); flex: none; }
+.lisa .line { font: 400 14px var(--font-ui); color: var(--ink); }
+.lisa-dots { display: inline-flex; align-items: center; gap: 3px; vertical-align: middle; }
+.lisa-dots span {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--ink);
+  animation: gx-dot 1.1s ease-in-out infinite;
+}
+.lisa-dots span:nth-child(2) { animation-delay: .15s; }
+.lisa-dots span:nth-child(3) { animation-delay: .30s; }
+.lisa-caret {
+  display: none;
+  width: 1.5px; height: 1em;
+  background: var(--ink);
+  margin-left: 1px;
+  vertical-align: -2px;
+  animation: gx-caret 1s steps(1) infinite;
+}
+
+.lisa-framing { margin-bottom: 28px; }
+.lisa-next { margin: 34px 0 30px; }
+
+/* ---------- Card ---------- */
+
+.card {
+  background: var(--paper);
+  border: var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow);
+  padding: 34px 36px 36px;
+  animation: gx-rise .7s var(--ease) both;
+}
+.card + .card { margin-top: 26px; }
+.card-eyebrow {
+  font: 700 10px var(--font-mono);
+  letter-spacing: 0.13em;
+  color: var(--ink-50);
+  margin-bottom: 12px;
+}
+.card-title {
+  margin: 0 0 12px;
+  font: 400 23px var(--font-display);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+.helper {
+  margin: 0 0 18px;
+  font: 400 14px var(--font-ui);
+  color: var(--ink-60);
+}
+.subhead {
+  margin: 0 0 24px;
+  font: 400 15px var(--font-ui);
+  color: var(--ink-60);
+  max-width: 54ch;
+}
+.card-divider {
+  height: 0;
+  border-top: var(--hairline);
+  margin: 30px 0 28px;
+}
+
+/* ---------- Score-band choice cards (selectable DLS primitive) ---------- */
+
+.choices-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+.choice {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius-ctrl);
+  padding: 16px 18px;
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+}
+.choice:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.choice:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--sky-solid); }
+.choice .band {
+  font: 400 28px var(--font-display);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.choice .band-sub {
+  display: block;
+  margin-top: 6px;
+  font: 500 13px var(--font-ui);
+  color: var(--ink-60);
+}
+.choice .therefore {
+  position: absolute;
+  top: 18px; right: 16px;
+  font: 400 22px var(--font-display);
+  color: var(--teal);
+  opacity: 0;
+  transform: translateY(-50%) scale(.4);
+}
+.choice .uline {
+  position: absolute;
+  left: 18px; bottom: 12px;
+  width: 34px; height: 2px;
+  background: var(--teal);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.choice[aria-checked="true"] {
+  background: var(--sky);
+}
+.choice[aria-checked="true"] .therefore {
+  top: 50%;
+  opacity: 1;
+  animation: gx-pop .5s var(--ease) both;
+}
+.choice[aria-checked="true"] .uline {
+  animation: gx-uline .55s var(--ease) .1s both;
+}
+
+/* ---------- Reason / option rows (vertical, radio-style) ---------- */
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-ctrl);
+  padding: 12px 12px;
+  transition: background .16s var(--ease);
+}
+.opt:hover { background: rgba(23, 21, 15, .035); }
+.opt:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--sky-solid); }
+.opt .bubble {
+  flex: none;
+  position: relative;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-28);
+  transition: border-color .16s var(--ease);
+}
+.opt .bubble::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--teal);
+  transform: scale(0);
+  transition: transform .18s var(--ease);
+}
+.opt .opt-label { font: 500 15px var(--font-ui); }
+.opt .opt-note { color: var(--ink-60); font-weight: 400; }
+.opt[aria-checked="true"] { background: var(--sky); }
+.opt[aria-checked="true"] .bubble { border-color: var(--ink); }
+.opt[aria-checked="true"] .bubble::after { transform: scale(1); }
+
+/* ---------- Section toggles (multi-select: English / Math / Reading / Science) ---------- */
+
+.section-toggles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.section-btn {
+  position: relative;
+  font: 600 14px var(--font-ui);
+  color: var(--ink);
+  text-align: center;
+  cursor: pointer;
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius-ctrl);
+  padding: 14px 10px;
+  transition: transform .16s var(--ease), box-shadow .16s var(--ease), background .16s var(--ease);
+}
+.section-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+.section-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--sky-solid); }
+.section-btn .tick {
+  position: absolute;
+  top: 7px; right: 9px;
+  font: 400 13px var(--font-display);
+  color: var(--teal);
+  opacity: 0;
+  transform: scale(.4);
+}
+.section-btn[aria-pressed="true"] { background: var(--sky); }
+.section-btn[aria-pressed="true"] .tick {
+  opacity: 1;
+  transform: scale(1);
+  animation: gx-tick .42s var(--ease) both;
+}
+
+/* ---------- Form fields (goals) ---------- */
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label {
+  font: 600 12px var(--font-ui);
+  letter-spacing: 0.01em;
+  color: var(--ink-70);
+}
+.field input,
+.field textarea {
+  font: 400 15px var(--font-ui);
+  color: var(--ink);
+  background: var(--surface);
+  border: var(--border);
+  border-radius: var(--radius-ctrl);
+  padding: 12px 13px;
+  width: 100%;
+}
+.field input::placeholder,
+.field textarea::placeholder { color: var(--ink-50); }
+.field input:focus,
+.field textarea:focus { outline: none; box-shadow: 0 0 0 3px var(--sky-solid); }
+.field textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
+.field .field-hint { font: 400 12px var(--font-ui); color: var(--ink-60); }
+
+.field-label {
+  font: 600 14px var(--font-ui);
+  margin: 0 0 12px;
+}
+
+/* ---------- Coral CTA (the one true action) ---------- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 32px;
+}
+.cta {
+  font: 600 14px var(--font-ui);
+  color: #fff;
+  background: var(--coral);
+  border: none;
+  border-radius: var(--radius-ctrl);
+  padding: 15px 28px;
+  cursor: pointer;
+  transition: transform .16s var(--ease), box-shadow .16s var(--ease);
+}
+.cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.cta:active { transform: translateY(0); }
+.cta:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--sky-solid); }
+.skip {
+  font: 500 14px var(--font-ui);
+  color: var(--ink-60);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-bottom: 1px solid transparent;
+}
+.skip:hover { color: var(--ink); border-bottom-color: var(--ink-28); }
+.skip:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--sky-solid); border-radius: 3px; }
+
+/* ---------- Footer ---------- */
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 40px;
+  background: var(--ink);
+  color: rgba(244, 241, 232, .7);
+}
+.footer .meta {
+  font: 700 10px var(--font-mono);
+  letter-spacing: 0.12em;
+}
+.footer .left { font: 400 13px var(--font-ui); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px) {
+  .nav, .footer { padding-left: 20px; padding-right: 20px; }
+  .shell { padding: 0 20px; }
+  .choices-grid, .field-grid { grid-template-columns: 1fr; }
+  .section-toggles { grid-template-columns: repeat(2, 1fr); }
+  .card { padding: 26px 22px 28px; }
+}
+
+/* ---------- Reduced motion: jump to resolved end state ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+  .progress-fill { transform: scaleX(1); }
+  .progress-node { transform: translate(-50%, -50%) scale(1); }
+  .mark .mark-bg { transform: scaleX(1) skewX(-4deg); }
+  .choice[aria-checked="true"] .therefore { top: 50%; opacity: 1; transform: translateY(-50%) scale(1); }
+  .choice[aria-checked="true"] .uline { transform: scaleX(1); }
+  .section-btn[aria-pressed="true"] .tick { opacity: 1; transform: scale(1); }
+  .card { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header>
+  <nav class="nav" aria-label="Onboarding">
+    <div class="brand">
+      <span class="word">Gnosis</span>
+      <span class="chip">ACT</span>
+    </div>
+    <span class="nav-meta">SETTING UP</span>
+  </nav>
+</header>
+
+<!-- ============ FLOW ============ -->
+<main class="shell">
+  <div class="flow">
+
+    <!-- progress: thin teal track + node, no step-count pill -->
+    <div class="progress" aria-label="Onboarding progress" role="img" aria-roledescription="progress">
+      <div class="progress-meta">
+        <span class="stage">ASSESSMENT</span>
+        <span>GETTING TO KNOW HOW YOU WORK</span>
+      </div>
+      <div class="progress-track">
+        <span class="progress-fill"></span>
+        <span class="progress-node"></span>
+      </div>
+    </div>
+
+    <!-- section head with the highlight motif -->
+    <section aria-labelledby="flow-heading">
+      <span class="kicker">YOUR ASSESSMENT</span>
+      <h1 class="prompt" id="flow-heading">Let's see
+        <span class="mark"><span class="mark-bg"></span><span class="mark-fg">how you work.</span></span>
+      </h1>
+
+      <!-- Lisa frames the step (type-on) -->
+      <div class="lisa lisa-framing lisa-line" data-delay="300">
+        <span class="dot"></span>
+        <span class="name">Lisa</span>
+        <span class="line">
+          <span class="lisa-dots" data-full="I read every answer here, then shape how I teach you across English, Math, Reading, and Science."><span></span><span></span><span></span></span><span class="lisa-text"></span><span class="lisa-caret"></span>
+        </span>
+      </div>
+
+      <!-- ASSESSMENT card: a representative subset that proves whole-ACT -->
+      <div class="card">
+        <div class="card-eyebrow">HOW YOU PACE</div>
+        <h2 class="card-title">When you're working through a timed practice test, how do you typically pace yourself?</h2>
+        <p class="helper">This helps us understand your time management approach.</p>
+
+        <div class="options" role="radiogroup" aria-label="How you pace yourself">
+          <button type="button" class="opt" role="radio" aria-checked="false">
+            <span class="bubble" aria-hidden="true"></span>
+            <span class="opt-label">Move quickly through questions to finish with time to spare.</span>
+          </button>
+          <button type="button" class="opt" role="radio" aria-checked="true">
+            <span class="bubble" aria-hidden="true"></span>
+            <span class="opt-label">Set time targets for each section and stick to them.</span>
+          </button>
+          <button type="button" class="opt" role="radio" aria-checked="false">
+            <span class="bubble" aria-hidden="true"></span>
+            <span class="opt-label">Take my time to be thorough, even if I don't finish.</span>
+          </button>
+          <button type="button" class="opt" role="radio" aria-checked="false">
+            <span class="bubble" aria-hidden="true"></span>
+            <span class="opt-label">Spend extra time on each question to make sure it's perfect.</span>
+          </button>
+        </div>
+
+        <div class="card-divider" role="separator"></div>
+
+        <div class="card-eyebrow">IN YOUR WORDS</div>
+        <h2 class="card-title">What do you struggle with the most?</h2>
+        <p class="helper">Tell us in your own words.</p>
+
+        <div class="field">
+          <label for="struggle">Your answer</label>
+          <textarea id="struggle" placeholder="e.g. I run out of time on the longer passages and start guessing.">I run out of time on Science and rush the last Reading passage.</textarea>
+        </div>
+
+        <div class="card-divider" role="separator"></div>
+
+        <div class="card-eyebrow">WHERE TIME RUNS SHORT</div>
+        <h2 class="card-title">Which ACT section(s) do you typically run out of time on?</h2>
+        <p class="helper">Select all that apply.</p>
+
+        <div class="section-toggles" role="group" aria-label="Sections you run out of time on">
+          <button type="button" class="section-btn" aria-pressed="true">Reading<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="false">Math<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="false">English<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="true">Science<span class="tick" aria-hidden="true">&#10003;</span></button>
+        </div>
+      </div>
+
+      <!-- Lisa previews the goals step (second type-on, staggered) -->
+      <div class="lisa lisa-next lisa-line" data-delay="1600">
+        <span class="dot"></span>
+        <span class="name">Lisa</span>
+        <span class="line">
+          <span class="lisa-dots" data-full="Now your targets. Tell me where you're aiming and which sections to push, and I'll plan the work."><span></span><span></span><span></span></span><span class="lisa-text"></span><span class="lisa-caret"></span>
+        </span>
+      </div>
+
+      <!-- GOALS card -->
+      <div class="card">
+        <div class="card-eyebrow">YOUR GOALS</div>
+        <h2 class="card-title">Tell us about your goals</h2>
+        <p class="subhead">Help us personalize your experience by sharing your ACT goals and current abilities.</p>
+
+        <div class="field-grid">
+          <div class="field">
+            <label for="target-score">Target ACT Score</label>
+            <input id="target-score" type="number" min="1" max="36" value="32" inputmode="numeric">
+            <span class="field-hint">1 to 36</span>
+          </div>
+          <div class="field">
+            <label for="current-score">Current ACT Score (Optional)</label>
+            <input id="current-score" type="number" min="1" max="36" placeholder="Optional" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="test-date">Test Date (Optional)</label>
+            <input id="test-date" type="date">
+          </div>
+          <div class="field">
+            <label for="study-hours">Study Hours per Week</label>
+            <input id="study-hours" type="number" min="0" value="6" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="card-divider" role="separator"></div>
+
+        <p class="field-label">Which sections are you strongest in?</p>
+        <div class="section-toggles" role="group" aria-label="Sections you are strongest in">
+          <button type="button" class="section-btn" aria-pressed="true">English<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="true">Math<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="false">Reading<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="false">Science<span class="tick" aria-hidden="true">&#10003;</span></button>
+        </div>
+
+        <div class="card-divider" role="separator"></div>
+
+        <p class="field-label">Which sections need the most improvement?</p>
+        <div class="section-toggles" role="group" aria-label="Sections that need the most improvement">
+          <button type="button" class="section-btn" aria-pressed="false">English<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="false">Math<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="true">Reading<span class="tick" aria-hidden="true">&#10003;</span></button>
+          <button type="button" class="section-btn" aria-pressed="true">Science<span class="tick" aria-hidden="true">&#10003;</span></button>
+        </div>
+
+        <!-- the one coral CTA -->
+        <div class="actions">
+          <button type="button" class="cta">Continue</button>
+          <button type="button" class="skip">Skip for now</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <span class="left">Gnosis ACT &middot; onboarding</span>
+  <span class="meta">PAPER &middot; INK &middot; NEON &middot; CORAL &middot; SKY &middot; TEAL</span>
+</footer>
+
+<script>
+/* ---------------------------------------------------------------
+   Lisa type-on - self-healing, runs on a raw file:// open.
+   Scans every .lisa-line: holds the three dots ~1.4s, then types
+   the line at 38ms/char with a blinking ink caret. Honors
+   prefers-reduced-motion by jumping to the fully-typed line.
+   --------------------------------------------------------------- */
+(function () {
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function runLine(line) {
+    if (line.getAttribute('data-init')) return;
+    var dots  = line.querySelector('.lisa-dots');
+    var text  = line.querySelector('.lisa-text');
+    var caret = line.querySelector('.lisa-caret');
+    if (!dots || !text || !caret) return;
+    line.setAttribute('data-init', '1');
+
+    var full = dots.getAttribute('data-full') || '';
+
+    if (reduce) {
+      dots.style.display = 'none';
+      caret.style.display = 'none';
+      text.textContent = full;
+      return;
+    }
+
+    var startDelay = parseInt(line.getAttribute('data-delay') || '0', 10);
+
+    function reset() {
+      dots.style.display = 'inline-flex';
+      text.textContent = '';
+      caret.style.display = 'none';
+    }
+    function run() {
+      reset();
+      setTimeout(function () {
+        dots.style.display = 'none';
+        caret.style.display = 'inline-block';
+        var i = 0;
+        (function step() {
+          text.textContent = full.slice(0, i);
+          i++;
+          if (i <= full.length) setTimeout(step, 38);
+          else setTimeout(run, 7000); /* hold, then loop */
+        })();
+      }, 1400);
+    }
+    setTimeout(run, startDelay);
+  }
+
+  function init() {
+    var lines = document.querySelectorAll('.lisa-line');
+    if (!lines.length) return false;
+    lines.forEach(runLine);
+    return true;
+  }
+
+  if (!init()) {
+    var iv = setInterval(function () { if (init()) clearInterval(iv); }, 120);
+    setTimeout(function () { clearInterval(iv); }, 15000);
+  }
+})();
+
+/* ---------------------------------------------------------------
+   Single-select radiogroups - one answer per group. Re-arms the
+   confirm animation on each pick.
+   --------------------------------------------------------------- */
+(function () {
+  document.querySelectorAll('[role="radiogroup"]').forEach(function (group) {
+    var items = group.querySelectorAll('[role="radio"]');
+    items.forEach(function (item) {
+      item.addEventListener('click', function () {
+        items.forEach(function (x) { x.setAttribute('aria-checked', 'false'); });
+        item.setAttribute('aria-checked', 'true');
+        /* restart the confirm animation for score-band cards */
+        var glyph = item.querySelector('.therefore');
+        var line  = item.querySelector('.uline');
+        [glyph, line].forEach(function (el) {
+          if (!el) return;
+          el.style.animation = 'none';
+          void el.offsetWidth; /* reflow to re-trigger */
+          el.style.animation = '';
+        });
+      });
+    });
+  });
+})();
+
+/* ---------------------------------------------------------------
+   Multi-select section toggles (English / Math / Reading / Science).
+   Each button flips its own aria-pressed; the teal tick re-pops.
+   --------------------------------------------------------------- */
+(function () {
+  document.querySelectorAll('.section-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var on = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', on ? 'false' : 'true');
+      var tick = btn.querySelector('.tick');
+      if (tick) {
+        tick.style.animation = 'none';
+        void tick.offsetWidth; /* reflow to re-trigger */
+        tick.style.animation = '';
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
