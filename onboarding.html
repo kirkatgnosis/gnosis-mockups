@@ -72,16 +72,6 @@ body {
   100%      { transform: scaleX(0) skewX(-4deg); }
 }
 
-/* Type-on supporting loops */
-@keyframes gx-dot {
-  0%, 80%, 100% { transform: translateY(0); opacity: .45; }
-  40%           { transform: translateY(-3px); opacity: 1; }
-}
-@keyframes gx-caret {
-  0%, 49%   { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
 /* Progress track - fill draws, node pops */
 @keyframes gx-prog {
   from { transform: scaleX(0); }
@@ -246,46 +236,6 @@ body {
   z-index: 0;
 }
 .mark .mark-fg { position: relative; z-index: 1; }
-
-/* ---------- Lisa bar (sky bar, teal dot, type-on) ---------- */
-
-.lisa {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 12px 18px;
-  background: var(--sky);
-  border: 1px solid var(--ink-14);
-  border-radius: 10px;
-}
-.lisa .dot {
-  flex: none;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--teal);
-}
-.lisa .name { font: 600 13px var(--font-ui); flex: none; }
-.lisa .line { font: 400 14px var(--font-ui); color: var(--ink); }
-.lisa-dots { display: inline-flex; align-items: center; gap: 3px; vertical-align: middle; }
-.lisa-dots span {
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--ink);
-  animation: gx-dot 1.1s ease-in-out infinite;
-}
-.lisa-dots span:nth-child(2) { animation-delay: .15s; }
-.lisa-dots span:nth-child(3) { animation-delay: .30s; }
-.lisa-caret {
-  display: none;
-  width: 1.5px; height: 1em;
-  background: var(--ink);
-  margin-left: 1px;
-  vertical-align: -2px;
-  animation: gx-caret 1s steps(1) infinite;
-}
-
-.lisa-framing { margin-bottom: 28px; }
-.lisa-next { margin: 34px 0 30px; }
 
 /* ---------- Card ---------- */
 
@@ -612,15 +562,6 @@ body {
         <span class="mark"><span class="mark-bg"></span><span class="mark-fg">how you work.</span></span>
       </h1>
 
-      <!-- Lisa frames the step (type-on) -->
-      <div class="lisa lisa-framing lisa-line" data-delay="300">
-        <span class="dot"></span>
-        <span class="name">Lisa</span>
-        <span class="line">
-          <span class="lisa-dots" data-full="I read every answer here, then shape how I teach you across English, Math, Reading, and Science."><span></span><span></span><span></span></span><span class="lisa-text"></span><span class="lisa-caret"></span>
-        </span>
-      </div>
-
       <!-- ASSESSMENT card: a representative subset that proves whole-ACT -->
       <div class="card">
         <div class="card-eyebrow">HOW YOU PACE</div>
@@ -669,15 +610,6 @@ body {
           <button type="button" class="section-btn" aria-pressed="false">English<span class="tick" aria-hidden="true">&#10003;</span></button>
           <button type="button" class="section-btn" aria-pressed="true">Science<span class="tick" aria-hidden="true">&#10003;</span></button>
         </div>
-      </div>
-
-      <!-- Lisa previews the goals step (second type-on, staggered) -->
-      <div class="lisa lisa-next lisa-line" data-delay="1600">
-        <span class="dot"></span>
-        <span class="name">Lisa</span>
-        <span class="line">
-          <span class="lisa-dots" data-full="Now your targets. Tell me where you're aiming and which sections to push, and I'll plan the work."><span></span><span></span><span></span></span><span class="lisa-text"></span><span class="lisa-caret"></span>
-        </span>
       </div>
 
       <!-- GOALS card -->
@@ -742,69 +674,6 @@ body {
 </footer>
 
 <script>
-/* ---------------------------------------------------------------
-   Lisa type-on - self-healing, runs on a raw file:// open.
-   Scans every .lisa-line: holds the three dots ~1.4s, then types
-   the line at 38ms/char with a blinking ink caret. Honors
-   prefers-reduced-motion by jumping to the fully-typed line.
-   --------------------------------------------------------------- */
-(function () {
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function runLine(line) {
-    if (line.getAttribute('data-init')) return;
-    var dots  = line.querySelector('.lisa-dots');
-    var text  = line.querySelector('.lisa-text');
-    var caret = line.querySelector('.lisa-caret');
-    if (!dots || !text || !caret) return;
-    line.setAttribute('data-init', '1');
-
-    var full = dots.getAttribute('data-full') || '';
-
-    if (reduce) {
-      dots.style.display = 'none';
-      caret.style.display = 'none';
-      text.textContent = full;
-      return;
-    }
-
-    var startDelay = parseInt(line.getAttribute('data-delay') || '0', 10);
-
-    function reset() {
-      dots.style.display = 'inline-flex';
-      text.textContent = '';
-      caret.style.display = 'none';
-    }
-    function run() {
-      reset();
-      setTimeout(function () {
-        dots.style.display = 'none';
-        caret.style.display = 'inline-block';
-        var i = 0;
-        (function step() {
-          text.textContent = full.slice(0, i);
-          i++;
-          if (i <= full.length) setTimeout(step, 38);
-          else setTimeout(run, 7000); /* hold, then loop */
-        })();
-      }, 1400);
-    }
-    setTimeout(run, startDelay);
-  }
-
-  function init() {
-    var lines = document.querySelectorAll('.lisa-line');
-    if (!lines.length) return false;
-    lines.forEach(runLine);
-    return true;
-  }
-
-  if (!init()) {
-    var iv = setInterval(function () { if (init()) clearInterval(iv); }, 120);
-    setTimeout(function () { clearInterval(iv); }, 15000);
-  }
-})();
-
 /* ---------------------------------------------------------------
    Single-select radiogroups - one answer per group. Re-arms the
    confirm animation on each pick.
